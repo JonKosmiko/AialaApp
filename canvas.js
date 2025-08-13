@@ -464,7 +464,7 @@ function loadLore() {
 async function loadCartasImages() {
     try {
         // Lista de extensiones de imagen soportadas
-        const imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+        const imageExtensions = ['png'];
         const images = [];
         
         // Intentar cargar imágenes numeradas (del 1 al 200 para cubrir un rango amplio)
@@ -1001,3 +1001,4 @@ document.getElementById('mainCanvas').addEventListener('touchmove', function(eve
         event.preventDefault();
     }
 }, { passive: false });
+
