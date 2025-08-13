@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AialaApp</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body><div id="mainCanvas" class="app-container">
+        <!-- Página de inicio -->
+        <div id="homePage" class="page active">
+            <h1 class="app-title">AIALACARTAS</h1>
+            <button class="main-button" onclick="showGallery('gallery1')">AIALATECA</button>
+            <button class="main-button" onclick="showGallery('gallery2')">ESTANTERÍA DE JUEGOS</button>
+            <button class="main-button" onclick="showGallery('lore')">LORE</button>
+        </div>
+
+        <!-- Galería 1 -->
+        <div id="gallery1Page" class="page">
+            <div class="page-header">
+                <h2 class="gallery-title">AIALATECA</h2>
+                <button class="close-button" onclick="showHome()">×</button>
+            </div>
+            <div class="gallery" id="gallery1">
+                <!-- Las imágenes se generarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Galería 2 -->
+        <div id="gallery2Page" class="page">
+            <div class="page-header">
+                <h2 class="gallery-title">ESTANTERÍA DE JUEGOS</h2>
+                <button class="close-button" onclick="showHome()">×</button>
+            </div>
+            <div class="gallery" id="gallery2">
+                <!-- Las imágenes se generarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Galería de Lore -->
+        <div id="lorePage" class="page">
+            <div class="page-header">
+                <h2 class="gallery-title">LORE</h2>
+                <button class="close-button" onclick="showHome()">×</button>
+            </div>
+            <div class="gallery" id="lore">
+                <!-- Los botones de lore se generarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Página de detalles -->
+        <div id="detailPage" class="page detail-page">
+            <div class="page-header">
+                <h2 id="detailTitle" class="gallery-title">Elemento seleccionado</h2>
+                <button class="close-button" onclick="goBackToGallery()">×</button>
+            </div>
+            <div id="detailContent" class="detail-content">
+                <!-- El contenido se generará dinámicamente desde canvas.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Presentación de diapositivas -->
+    <div id="slideshow" class="slideshow">
+        <button class="slideshow-close" onclick="closeSlideshow()">×</button>
+        <div class="slide-container" id="slideContainer">
+            <!-- Las diapositivas se generarán dinámicamente -->
+        </div>
+    </div>
+
+    <script src="canvas.js"></script>
+</body>
+</html>

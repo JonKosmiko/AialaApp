@@ -1,0 +1,955 @@
+/* Declaración de fuente personalizada */
+@font-face {
+    font-family: 'PixelGosub';
+    src: url('PixelGosub-ZaRz.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Estilos generales para la aplicación móvil */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ocultar barras de desplazamiento en toda la aplicación */
+* {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+*::-webkit-scrollbar {
+    display: none; /* Safari y Chrome */
+}
+
+/* También aplicar a elementos específicos que pueden tener scroll */
+html, body, div, section, article, main, aside, nav, header, footer {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+div::-webkit-scrollbar,
+section::-webkit-scrollbar,
+article::-webkit-scrollbar,
+main::-webkit-scrollbar,
+aside::-webkit-scrollbar,
+nav::-webkit-scrollbar,
+header::-webkit-scrollbar,
+footer::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    font-family: 'PixelGosub', Arial, sans-serif;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Canvas principal con aspecto fijo */
+#mainCanvas {
+    border: 2px solid #333;
+    background-color: white;
+    display: block;
+    max-width: 100vw;
+    max-height: 100vh;
+    aspect-ratio: 9/14; /* Aspecto vertical para móviles */
+    width: 100%;
+    height: auto;
+}
+
+/* Contenedor de la aplicación */
+.app-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilos para las páginas */
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.page.active {
+    display: flex;
+}
+
+/* Título de la aplicación */
+.app-title {
+    color: white;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 40px;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Botones principales */
+.main-button {
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 15px;
+    padding: 20px 40px;
+    margin: 15px;
+    font-family: 'PixelGosub', Arial, sans-serif;
+    font-size: 1.2em;
+    font-weight: normal;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    min-width: 200px;
+}
+
+.main-button:hover,
+.main-button:active {
+    background: rgba(255,255,255,1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+/* Header de las páginas internas */
+.page-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 100;
+}
+
+.close-button {
+    background: rgba(255,255,255,0.8);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-family: 'PixelGosub', Arial, sans-serif;
+    font-size: 20px;
+    font-weight: normal;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-button:hover {
+    background: rgba(255,255,255,1);
+    transform: scale(1.1);
+}
+
+/* Título de galería */
+.gallery-title {
+    color: white;
+    font-family: 'PixelGosub', Arial, sans-serif;
+    font-size: 1.5em;
+    font-weight: normal;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Galería de imágenes - Configuración base */
+.gallery {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+/* Galería AIALACARTAS - 3 columnas verticales (diseño original) */
+#gallery1 {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: min-content;
+    align-content: start;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 80px 10px 20px;
+    gap: 8px;
+}
+
+/* Galería ESTANTERÍA DE JUEGOS - 2 filas horizontales */
+#gallery2 {
+    grid-template-rows: 1fr 1fr;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 80px 20px 20px;
+}
+
+/* Galería LORE - disposición vertical como cartas pero con botones de texto */
+#lore {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: min-content;
+    align-content: start;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 80px 10px 20px;
+    gap: 15px;
+}
+
+.gallery-item {
+    background: rgba(255,255,255,0.8);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'PixelGosub', Arial, sans-serif;
+    font-weight: normal;
+    color: #333;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+/* Estilos específicos para galería AIALACARTAS (3 columnas) */
+#gallery1 .gallery-item {
+    aspect-ratio: unset;
+    height: auto;
+    width: 100%;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+}
+
+/* Estilos específicos para galería ESTANTERÍA DE JUEGOS (2 filas) */
+#gallery2 .gallery-item {
+    aspect-ratio: unset;
+    height: 100%;
+    width: auto;
+    margin: 0 5px;
+}
+
+/* Estilos específicos para galería LORE (2 columnas) */
+#lore .gallery-item {
+    aspect-ratio: unset;
+    height: auto;
+    width: 100%;
+    padding: 20px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;
+}
+
+.gallery-item:hover,
+.gallery-item:active {
+    transform: scale(1.1);
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Página de detalles */
+.detail-page {
+    padding-top: 80px;
+}
+
+.detail-content {
+    padding: 20px;
+    height: calc(100vh - 140px);
+    overflow-y: auto;
+}
+
+.detail-content .game-info {
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+}
+
+.detail-content .game-info h2 {
+    color: #FFD700;
+    margin-top: 0;
+    font-size: 1.5em;
+    font-family: 'PixelGosub', Arial, sans-serif;
+}
+
+.detail-content .game-info p {
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.detail-content .rules {
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+}
+
+.detail-content .rules h3 {
+    color: #87CEEB;
+    margin-top: 0;
+    font-family: 'PixelGosub', Arial, sans-serif;
+}
+
+.detail-content .rules ul {
+    padding-left: 20px;
+}
+
+.detail-content .rules li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.detail-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+}
+
+.detail-button {
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 12px;
+    padding: 15px 30px;
+    font-family: 'PixelGosub', Arial, sans-serif;
+    font-size: 1.1em;
+    font-weight: normal;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    min-width: 180px;
+}
+
+.detail-button:hover,
+.detail-button:active {
+    background: rgba(255,255,255,1);
+    transform: translateY(-2px);
+}
+
+/* Presentación de diapositivas */
+.slideshow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.slideshow.active {
+    display: flex;
+}
+
+.slide-container {
+    position: relative;
+    width: 98%; /* Usar casi toda la pantalla */
+    height: 92%; /* Más altura disponible */
+    background: white;
+    border-radius: 10px; /* Un poco de redondeo para estética */
+    overflow: hidden;
+    touch-action: pan-x;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5); /* Sombra para destacar */
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.slide h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.slide p {
+    font-size: 1em;
+    color: #666;
+    line-height: 1.4;
+}
+
+.slide img {
+    max-width: 100%;
+    max-height: 60%;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.slideshow-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.slideshow-close:hover {
+    background: rgba(0,0,0,0.7);
+}
+
+/* Modal de imagen ampliada */
+.image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    cursor: pointer;
+}
+
+.image-modal.active {
+    display: flex;
+}
+
+.image-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-modal-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+/* Estilo especial para elementos de galería con imágenes */
+.gallery-image-item {
+    padding: 0;
+    overflow: visible;
+    background: transparent;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* Estilos específicos para imágenes en AIALACARTAS (3 columnas) */
+#gallery1 .gallery-image-item {
+    aspect-ratio: unset;
+    height: auto;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+}
+
+/* Estilos específicos para imágenes en ESTANTERÍA DE JUEGOS (2 filas) */
+#gallery2 .gallery-image-item {
+    aspect-ratio: unset;
+    height: 100%;
+    width: auto;
+    margin: 0 5px;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+}
+
+.gallery-image-item img {
+    object-fit: contain;
+    border-radius: 0;
+    display: block;
+    background: rgba(255,255,255,0.8);
+    transition: all 0.3s ease;
+}
+
+/* Estilos específicos para imágenes en AIALACARTAS (3 columnas) */
+#gallery1 .gallery-image-item img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: unset;
+    object-fit: contain;
+    border-radius: 0;
+    background: transparent;
+}
+
+/* Estilos específicos para imágenes en ESTANTERÍA DE JUEGOS (2 filas) */
+#gallery2 .gallery-image-item img {
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    background: transparent;
+    border-radius: 0;
+}
+
+/* Overlay con título y capa de color - SOLO para galería de juegos */
+.gallery-game-item .image-title-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    background: rgba(0,0,0,0.2);
+    color: white;
+    font-family: 'PixelGosub', Arial, sans-serif;
+    font-size: 1.8em;
+    font-weight: normal;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    z-index: 10;
+}
+
+.gallery-game-item .image-title-overlay > span {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    white-space: nowrap;
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gallery-image-item:hover,
+.gallery-image-item:active {
+    transform: scale(1.05);
+}
+
+.gallery-image-item:hover img,
+.gallery-image-item:active img {
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Estilo especial para elementos de juegos */
+.gallery-game-item {
+    padding: 10px;
+    overflow: visible;
+    aspect-ratio: unset;
+    height: auto;
+    background: rgba(255,255,255,0.8);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.gallery-game-item img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.gallery-game-item .game-title {
+    font-family: 'PixelGosub', Arial, sans-serif;
+    font-size: 0.8em;
+    font-weight: normal;
+    color: #333;
+    text-align: center;
+    line-height: 1.2;
+    padding: 2px 4px;
+}
+
+.gallery-game-item:hover,
+.gallery-game-item:active {
+    transform: scale(1.05);
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Responsive para pantallas muy pequeñas */
+@media (max-width: 320px) {
+    .app-title {
+        font-size: 2em;
+    }
+    
+    .main-button {
+        padding: 15px 30px;
+        font-size: 1em;
+        min-width: 150px;
+    }
+    
+    .gallery {
+        gap: 8px;
+        padding: 80px 15px 15px;
+    }
+    
+    .gallery-item {
+        font-size: 0.8em;
+        min-width: 100px;
+    }
+    
+    .gallery-image-item img {
+        max-width: 150px;
+    }
+}
+
+/* ===== ESTILOS PARA DOCUMENTOS DE JUEGOS ===== */
+
+/* Estilos para las páginas de juegos individuales */
+.game-document-body {
+    margin: 0;
+    padding: 0;
+    font-family: 'PixelGosub', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-document-header {
+    background: rgba(0,0,0,0.3);
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid rgba(255,255,255,0.2);
+}
+
+.game-document-header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.game-document-content {
+    flex: 1;
+    padding: 30px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.game-info {
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.game-info h2 {
+    color: #FFD700;
+    margin-top: 0;
+    font-size: 1.8em;
+}
+
+.game-info p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.game-rules {
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.game-rules h3 {
+    color: #87CEEB;
+    margin-top: 0;
+}
+
+.game-rules ul {
+    padding-left: 20px;
+}
+
+.game-rules li {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.game-back-button {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.5);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-family: 'PixelGosub', Arial, sans-serif;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 20px auto;
+    width: fit-content;
+}
+
+.game-back-button:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Estilos para los botones de slideshow en documentos de juegos */
+.detail-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.detail-button {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.5);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 20px;
+    font-family: 'PixelGosub', Arial, sans-serif;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.detail-button:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Estilos para la vista simplificada de juegos */
+.game-detail-simple {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 20px;
+    text-align: center;
+}
+
+.game-image-container {
+    margin-bottom: 20px;
+}
+
+.game-detail-image {
+    width: 350px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 15px;
+    border: 3px solid rgba(255,255,255,0.3);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.game-quick-info {
+    font-size: 1.1em;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+
+.game-quick-info span {
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .detail-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .detail-button {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .game-detail-image {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .game-quick-info {
+        font-size: 1em;
+    }
+}
+
+/* Responsive para documentos de juegos */
+@media (max-width: 768px) {
+    .game-document-header h1 {
+        font-size: 2em;
+    }
+    
+    .game-document-content {
+        padding: 20px 15px;
+    }
+    
+    .game-info, .game-rules {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+/* Estilos para la galería de recursos - Versión vertical de 2 columnas */
+.resource-gallery-slide-vertical {
+    padding: 0; /* Sin padding para aprovechar todo el espacio */
+    overflow-y: auto; /* Scroll vertical como AIALATECA */
+    overflow-x: hidden; /* Sin scroll horizontal */
+    width: 100%;
+    height: 100%; /* Altura completa del slide-container */
+    box-sizing: border-box; /* Asegurar que no se desborde */
+}
+
+.resource-gallery-vertical {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas ocupan todo el ancho */
+    grid-auto-rows: min-content;
+    align-content: start;
+    gap: 5px 0; /* 5px de separación vertical, 0px horizontal */
+    padding: 0; /* Sin padding para aprovechar todo el espacio */
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.resource-gallery-item-vertical {
+    aspect-ratio: unset;
+    height: auto;
+    width: 100%;
+    padding: 5px;
+    margin: 2x; /* Sin márgenes */
+    background: transparent;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    line-height: 0; /* Elimina espacio de línea del contenedor */
+}
+
+.resource-gallery-item-vertical:hover {
+    transform: scale(1.05);
+}
+
+.resource-gallery-item-vertical img {
+    width: 100%; /* Ocupa el 100% del ancho de la columna */
+    height: auto; /* Altura automática para mostrar la imagen completa */
+    max-height: none; /* Sin límite de altura máxima */
+    aspect-ratio: unset;
+    object-fit: cover; /* Llena todo el espacio disponible, puede recortar */
+    border-radius: 0;
+    background: transparent;
+    display: block;
+    transition: all 0.3s ease;
+    margin: 0 auto; /* Centrar horizontalmente */
+    padding: 0; /* Sin padding */
+    line-height: 5px; /* Elimina espacio de línea */
+}
+
+.resource-gallery-item-vertical:hover img {
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Responsive para la galería de recursos vertical de 2 columnas */
+@media (max-width: 768px) {
+    .resource-gallery-vertical {
+        gap: 0; /* Sin gap en tablets */
+        padding: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .resource-gallery-vertical {
+        gap: 0; /* Sin gap en móviles */
+        padding: 0;
+    }
+}
+
+/* Estilos específicos para elementos de lore */
+.gallery-lore-item {
+    background: rgba(255,255,255,0.9) !important;
+    border-radius: 15px !important;
+    padding: 20px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 80px !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.gallery-lore-item:hover,
+.gallery-lore-item:active {
+    background: rgba(255,255,255,1) !important;
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+.lore-title {
+    font-family: 'PixelGosub', Arial, sans-serif;
+    font-size: 1.1em;
+    font-weight: normal;
+    color: #333;
+    text-align: center;
+    line-height: 1.3;
+    word-wrap: break-word;
+    hyphens: auto;
+}
